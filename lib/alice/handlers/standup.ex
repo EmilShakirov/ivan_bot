@@ -1,4 +1,8 @@
 defmodule Alice.Handlers.Standup do
+  @moduledoc """
+  Alice.Handlers.Standup is a slack handler for managing incoming slack bot messages
+  """
+
   use Alice.Router
   use Timex
 
@@ -11,7 +15,7 @@ defmodule Alice.Handlers.Standup do
 
   def get_daily_report(conn = %Conn{slack: %{users: users}}) do
     conn
-    |> get_state(timestamp(), %{})
+    |> current_report
     |> Map.to_list()
     |> Enum.map(
       fn({user, report}) ->
@@ -38,12 +42,15 @@ defmodule Alice.Handlers.Standup do
   end
 
   def standup(conn = %Conn{message: %{user: user, text: report}}) do
-    conn = put_state(conn, timestamp(), update_report(conn, report, user))
+    updated_report = update_report(conn, report, user)
+    conn = put_state(conn, timestamp(), updated_report)
 
     conn
     |> report_thank
     |> reply(conn)
   end
+
+  defp current_report(conn), do: get_state(conn, timestamp(), %{})
 
   defp format_report(report) do
     report
@@ -60,7 +67,6 @@ defmodule Alice.Handlers.Standup do
   end
 
   defp update_report(conn, report, user_id) do
-    get_state(conn, timestamp(), %{})
-    |> Map.put(user_id, format_report(report))
+    Map.put(current_report(conn), user_id, format_report(report))
   end
 end

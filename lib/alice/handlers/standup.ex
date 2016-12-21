@@ -1,7 +1,11 @@
+require IEx;
+
 defmodule Alice.Handlers.Standup do
   @moduledoc """
   Alice.Handlers.Standup is a slack handler for managing incoming slack bot messages
   """
+
+  @projects ~w(projects results risks)
 
   use Alice.Router
   use Timex
@@ -9,27 +13,21 @@ defmodule Alice.Handlers.Standup do
   alias Alice.Conn
   alias Alice.StateBackends
 
-  command ~r/\breport\b/i, :get_daily_report
-  command ~r/\bstandup\b/i, :standup
-  route ~r/\bstandup\b/i, :standup
+  command ~r/\breport\b/i, :daily_report
+  command ~r/\bstandup\b\s+(?<term>.+)/i, :standup
+  route ~r/\bstandup\b\s+(?<term>.+)/i, :standup
 
-  def get_daily_report(conn = %Conn{slack: %{users: users}}) do
-    conn
-    |> current_report
-    |> Map.to_list()
-    |> Enum.map(
-      fn({user, report}) ->
-        name = users
-                |> Map.get(user)
-                |> Map.get(:profile)
-                |> Map.get(:real_name_normalized, users[user].name)
-
-        """
-        *#{name}*
-        #{String.replace(report, ~r/<|>/, "")}
-        """
-      end
-    )
+  def daily_report(conn = %Conn{slack: %{users: users}}) do
+    @projects
+    |> Enum.map(fn(project_name) ->
+        EEx.eval_file(
+          "templates/report.eex",
+          [
+            project_name: project_name,
+            reports: reports_per_project(project_name, conn)
+          ]
+        )
+    end)
     |> Enum.join("\n")
     |> reply(conn)
   end
@@ -41,11 +39,14 @@ defmodule Alice.Handlers.Standup do
     |> Slack.send_message(Application.get_env(:alice, :room))
   end
 
-  def standup(conn = %Conn{message: %{user: user, text: report}}) do
-    updated_report = update_report(conn, report, user)
-    conn = put_state(conn, timestamp(), updated_report)
+  def standup(conn = %Conn{message: %{user: user_id, text: report}}) do
+    updated_report =  conn
+                      |> Conn.last_capture
+                      |> String.downcase
+                      |> update_report(user_id, report, conn)
 
     conn
+    |> put_state(timestamp(), updated_report)
     |> report_thank
     |> reply(conn)
   end
@@ -54,8 +55,25 @@ defmodule Alice.Handlers.Standup do
 
   defp format_report(report) do
     report
-    |> String.replace("standup\n", "")
+    |> String.replace(~r/standup\s+\w+\n/i, "")
     |> String.replace(~r/<|>/, "")
+  end
+
+  defp reports_per_project(project_name, conn = %Conn{slack: %{users: users}}) do
+    conn
+      |> current_report
+      |> Map.get(project_name, %{})
+      |> Map.to_list
+      |> Enum.map(
+        fn({user, report}) ->
+          name = get_in(users, [user, :profile, :real_name_normalized])
+          if String.first(name) == nil, do: name = get_in(users, [user, :name])
+
+          """
+          *#{name}*
+          #{String.replace(report, ~r/<|>/, "")}
+          """
+        end)
   end
 
   defp report_thank(conn) do
@@ -66,7 +84,17 @@ defmodule Alice.Handlers.Standup do
     Timex.format!(Timex.today, "%y%m%d", :strftime)
   end
 
-  defp update_report(conn, report, user_id) do
-    Map.put(current_report(conn), user_id, format_report(report))
+  defp update_report(project_name, user_id, report, conn) do
+    state = current_report(conn)
+    project_name = String.downcase(project_name)
+    by_project = state
+                  |> Map.put_new(project_name, %{})
+                  |> Map.get(project_name, %{})
+
+    Map.put(
+      state,
+      project_name,
+      Map.put(by_project, user_id, format_report(report))
+    )
   end
 end

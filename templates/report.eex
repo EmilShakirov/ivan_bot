@@ -1,0 +1,7 @@
+*<%= String.capitalize(project_name) %>:*
+<%= if length(reports) == 0 do %>
+Team didn't send any reports yet
+<% end %>
+<%= Enum.map(reports, fn(report) -> %>
+<%= report %>
+<% end) %>

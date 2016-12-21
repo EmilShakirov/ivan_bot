@@ -1,3 +1,1 @@
-# ActiveAlice
-
-An Alice bot instance for the Active Engineering Slack team.
+# acl_ivan_bot

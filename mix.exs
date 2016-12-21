@@ -11,7 +11,7 @@ defmodule Andriy.Mixfile do
   end
 
   def application do
-    [ applications: [:alice, :quantum],
+    [ applications: [:alice, :timex],
       mod: {
         Alice, %{
           handlers: [
@@ -26,7 +26,6 @@ defmodule Andriy.Mixfile do
      [
        {:alice, github: "vaihtovirta/alice", branch: "upgrade-slack-dependency"},
        {:credo, "~> 0.5", only: [:dev, :test]},
-       {:quantum, ">= 1.8.1"},
        {:timex, "~> 3.0"},
        {:websocket_client, "~> 1.1.0"},
      ]

@@ -1,0 +1,50 @@
+*Available commands:*
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`standup %PROJECT_NAME%`
+> _Sends your daily report (should be used in DM without a mentioning of @ivan)_
+
+_Example:_
+```
+You: standup tesla-motors
+1) Opening of glovebox causes ejection of the driver's seat
+https://tesla-motors.atlassian.net/browse/ENG-5456
+Status: done
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+2) You cannot drive while windshields are turned on
+https://tesla-motors.atlassian.net/browse/ENG-7272
+Status: cannot reproduce, asked Gilbert to check again
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+3) Tune wheels according to styleguides
+https://tesla-motors.net/browse/ENG-7399
+Status: done
+
+ivan: Thank you for your report, @username
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+`@ivan report`
+> _Gives you recent daily report (shold be used with mentioning of @ivan)_
+
+_Example:_
+```
+You: @ivan report
+
+ivan:
+
+*Team Alpha:*
+
+*PETR PETROV:*
+
+1)...
+2)...
+3)...
+
+etc
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+`@ivan yesterday`
+> _Gives you yesterday's report (shold be used with mentioning of @ivan)_

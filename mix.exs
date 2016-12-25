@@ -28,6 +28,7 @@ defmodule Andriy.Mixfile do
        {:credo, "~> 0.5", only: [:dev, :test]},
        {:timex, "~> 3.0"},
        {:websocket_client, "~> 1.1.0"},
+       {:jira, "~> 0.0.8"},
      ]
   end
 end

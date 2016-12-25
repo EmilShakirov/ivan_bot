@@ -1,15 +1,27 @@
 defmodule AclIvanBot.DateHelper do
+  @moduledoc """
+  AclIvanBot.DateHelper contains helper functions related to date and time
+  """
+
+  @default_format_schema "%y%m%d"
+
   use Timex
 
   def today do
-    Timex.format!(Timex.today, "%y%m%d", :strftime)
+    default_format!(Timex.today)
   end
 
   def yesterday do
-    case Timex.weekday(Timex.today) do
+    Timex.today
+    |> Timex.weekday
+    |> case do
       1 -> Timex.shift(Timex.today, days: -3)
       _ -> Timex.shift(Timex.today, days: -1)
     end
-    |> Timex.format!("%y%m%d", :strftime)
+    |> default_format!
+  end
+
+  defp default_format!(time) do
+    Timex.format!(time, @default_format_schema, :strftime)
   end
 end

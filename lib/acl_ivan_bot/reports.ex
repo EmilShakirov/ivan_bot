@@ -101,7 +101,11 @@ defmodule AclIvanBot.Reports do
         computed_report = compute_report(report)
         new_state = updated_state(
           conn,
-          %{report: computed_report, project_name: project_name}
+          %{
+            project_name: project_name,
+            report: computed_report,
+            user_id: user
+          }
         )
         Conn.put_state_for(conn, today, new_state)
 
@@ -119,6 +123,7 @@ defmodule AclIvanBot.Reports do
   defp updated_state(conn = %Conn{message: %{user: user_id, text: report}}, options \\ %{}) do
     report = options[:report] || report
     project_name = options[:project_name] || conn |> Conn.last_capture |> String.downcase
+    user_id = options[:user_id] || user_id
     state_by_project = conn
                         |> Conn.get_state_for(today, %{})
                         |> Map.put_new(project_name, %{})

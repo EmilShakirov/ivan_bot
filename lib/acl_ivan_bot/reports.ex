@@ -39,7 +39,8 @@ defmodule AclIvanBot.Reports do
   defp compute_report(report) do
     report = cond do
       Regex.match?(@already_gen_jira_report, report) -> report
-      Regex.match?(@jira_issue_regex, report) -> generate_jira_report(report)
+      Regex.match?(@jira_issue_regex, report)
+        && !Regex.match?(~r/browse\//, report) -> generate_jira_report(report)
       true -> report
     end
 

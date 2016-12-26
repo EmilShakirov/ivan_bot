@@ -10,15 +10,14 @@ defmodule AclIvanBot.Reports do
   alias Alice.Conn
   import AclIvanBot.DateHelper, only: [today: 0]
 
-  def generate_report(conn, state) when state == %{}, do: "Report is empty."
-  def generate_report(conn = %Conn{slack: %{users: users}}, state) do
+  def generate_report(conn, time) do
     @projects
     |> Enum.map(fn(project_name) ->
         EEx.eval_file(
           "templates/report.eex",
           [
             project_name: project_name,
-            reports: reports_per_project(project_name, users, state, conn)
+            reports: reports_per_project(conn, project_name, time)
           ]
         )
     end)
@@ -33,10 +32,14 @@ defmodule AclIvanBot.Reports do
   end
 
   def valid_project_name?(conn) do
-    Enum.member?(@projects, Conn.last_capture(conn))
+    Enum.member?(@projects, last_capture(conn))
   end
 
-  defp compute_report(report) do
+  defp last_capture(conn) do
+    conn |> Conn.last_capture |> String.downcase
+  end
+
+  defp decorate_report(report) do
     report = cond do
       Regex.match?(@already_gen_jira_report, report) -> report
       Regex.match?(@jira_issue_regex, report)
@@ -47,12 +50,12 @@ defmodule AclIvanBot.Reports do
     report |> String.replace(~r/<|>/, "")
   end
 
-  defp fetch_name(users, user) do
+  defp fetch_name(users, user_id) do
     users
-    |> get_in([user, :profile, :first_name])
+    |> get_in([user_id, :profile, :first_name])
     |> to_string
     |> case do
-        "" -> get_in(users, [user, :name])
+        "" -> get_in(users, [user_id, :name])
         name -> name
       end
     |> String.upcase
@@ -92,45 +95,46 @@ defmodule AclIvanBot.Reports do
       ])
   end
 
-  defp reports_per_project(project_name, users, state, conn) do
-    state
+  defp reports_per_project(conn = %Conn{slack: %{users: users}}, project_name, time) do
+    conn
+    |> Conn.get_state_for(time, %{})
     |> Map.get(project_name, %{})
     |> Map.to_list
     |> Enum.map(
-      fn({user, report}) ->
-        computed_report = compute_report(report)
+      fn({user_id, report}) ->
+        decorated_report = decorate_report(report)
         new_state = updated_state(
           conn,
           %{
             project_name: project_name,
-            report: computed_report,
-            user_id: user
-          }
-        )
-        Conn.put_state_for(conn, today, new_state)
+            report: decorated_report,
+            time: time,
+            user_id: user_id
+          })
+        Conn.put_state_for(conn, time, new_state)
 
         """
-        *#{fetch_name(users, user)}:*
-        #{computed_report}
+        *#{fetch_name(users, user_id)}:*
+        #{decorated_report}
         """
       end)
   end
 
-  defp report_thank(conn) do
-    "Thank you for your report, #{Conn.at_reply_user(conn)}"
-  end
+  defp report_thank(conn), do: "Thank you for your report, #{Conn.at_reply_user(conn)}"
 
   defp updated_state(conn = %Conn{message: %{user: user_id, text: report}}, options \\ %{}) do
+    project_name = options[:project_name] || last_capture(conn)
     report = options[:report] || report
-    project_name = options[:project_name] || conn |> Conn.last_capture |> String.downcase
+    time = options[:time] || today
     user_id = options[:user_id] || user_id
+
     state_by_project = conn
-                        |> Conn.get_state_for(today, %{})
+                        |> Conn.get_state_for(time, %{})
                         |> Map.put_new(project_name, %{})
                         |> Map.get(project_name, %{})
                         |> Map.put(user_id, format_report(report))
     conn
-    |> Conn.get_state_for(today, %{})
+    |> Conn.get_state_for(time, %{})
     |> Map.put(project_name, state_by_project)
   end
 end

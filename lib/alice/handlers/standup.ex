@@ -20,7 +20,7 @@ defmodule Alice.Handlers.Standup do
 
   def daily_report(conn) do
     conn
-    |> generate_report(Conn.get_state_for(conn, today, %{}))
+    |> generate_report(today)
     |> reply(conn)
   end
 
@@ -38,7 +38,7 @@ defmodule Alice.Handlers.Standup do
 
   def yesterday_report(conn) do
     conn
-    |> generate_report(Conn.get_state_for(conn, yesterday, %{}))
+    |> generate_report(yesterday)
     |> reply(conn)
   end
 end

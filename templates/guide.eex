@@ -1,8 +1,13 @@
 *Available commands:*
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-`standup %PROJECT_NAME%`
+```
+standup %PROJECT_NAME%
+%REPORT_MESSAGE%
+```
 > _Sends your daily report (should be used in DM without a mentioning of @ivan)_
+> _Report message should be on new line_
+> _You can send your report in any format as well as *comma-separated JIRA issue numbers*_
 
 _Example:_
 ```
@@ -12,7 +17,7 @@ https://tesla-motors.atlassian.net/browse/ENG-5456
 Status: done
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 2) You cannot drive while windshields are turned on
-https://tesla-motors.atlassian.net/browse/ENG-7272
+https://tesla-motors.atlassian.net/browse/TM-7272
 Status: cannot reproduce, asked Gilbert to check again
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 3) Tune wheels according to styleguides
@@ -20,6 +25,11 @@ https://tesla-motors.net/browse/ENG-7399
 Status: done
 
 ivan: Thank you for your report, @username
+```
+*OR*
+```
+You: standup tesla-motors
+TM-1234, TM-765, ENG-54569, DES-9, TM-900
 ```
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

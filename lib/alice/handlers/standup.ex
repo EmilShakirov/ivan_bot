@@ -9,7 +9,6 @@ defmodule Alice.Handlers.Standup do
   """
 
   alias Alice.Conn
-  alias Alice.StateBackends
   import AclIvanBot.DateHelper
   import AclIvanBot.Reports
   use Alice.Router

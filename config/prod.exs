@@ -9,3 +9,8 @@ config :alice,
 config :logger,
   level: :info,
   truncate: 512
+
+config :jira,
+  username: System.get_env("JIRA_USERNAME"),
+  password: System.get_env("JIRA_PASSWORD"),
+  host: System.get_env("JIRA_HOST")

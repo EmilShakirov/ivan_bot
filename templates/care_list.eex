@@ -5,7 +5,7 @@ _Who sent_:
 <%= Enum.map(care, fn(user) -> %>
 *<%= user %>*
 <% end) %>
-_Who didn't sent_:
+_Who didn't send_:
 <%= Enum.map(dont_care, fn(user) -> %>
 *<%= user %>*
 <% end) %>

@@ -17,7 +17,12 @@ defmodule Alice.Handlers.StandupTest do
   defp conn do
     %Conn{
       message: %{user: @user_id, text: "test", channel: :channel, captures: ["projects"]},
-      slack: %{users: %{@user_id => %{name: "Ivan", id: "ivan"}}},
+      slack: %{users:
+        %{
+          @user_id => %{name: "Ivan", id: "ivan"},
+          "U32FGC7UG" => %{name: "Michael", id: "michael"}
+        },
+      },
       state: %{
         today => %{"projects" => %{@user_id => "report"}},
         yesterday => %{"projects" => %{@user_id => "yesterday's report"}}
@@ -39,29 +44,38 @@ defmodule Alice.Handlers.StandupTest do
   end
 
   describe "daily_report/1" do
-    test "generates daily report", state do
+    test "generates daily report", %{conn: conn} do
       report = "daily_report.txt" |> load_fixture |> String.trim_trailing
-      Standup.daily_report(state[:conn])
+      Standup.daily_report(conn)
 
       assert_received {:msg, ^report}
     end
   end
 
   describe "yesterday_report/1" do
-    test "generates yesterday report", state do
+    test "generates yesterday report", %{conn: conn} do
       report = "yesterday_report.txt" |> load_fixture |> String.trim_trailing
-      Standup.yesterday_report(state[:conn])
+      Standup.yesterday_report(conn)
 
       assert_received {:msg, ^report}
     end
   end
 
   describe "standup/1" do
-    test "says thanks after receiving standup report", state do
+    test "says thanks after receiving standup report", %{conn: conn} do
       thanks = "Thank you for your report, <@ivan>"
-      Standup.standup(state[:conn])
+      Standup.standup(conn)
 
       assert_received {:msg, ^thanks}
+    end
+  end
+
+  describe "who_cares/1" do
+    test "renders senders list", %{conn: conn} do
+      list = "care_list.txt" |> load_fixture |> String.trim_trailing
+      Standup.who_cares(conn)
+
+      assert_received {:msg, ^list}
     end
   end
 end

@@ -1,0 +1,12 @@
+<%= if length(care) == 0 do %>
+Team didn't send any reports yet.
+<%= else %>
+_Who sent_:
+<%= Enum.map(care, fn(user) -> %>
+*<%= user %>*
+<% end) %>
+_Who didn't sent_:
+<%= Enum.map(dont_care, fn(user) -> %>
+*<%= user %>*
+<% end) %>
+<% end %>

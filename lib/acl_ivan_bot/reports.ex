@@ -5,13 +5,14 @@ defmodule AclIvanBot.Reports do
 
   @already_gen_jira_report ~r/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -/
   @jira_issue_regex ~r/[a-z]+-\d+/i
-  @projects ~w(projects results risks)
 
   alias Alice.Conn
   import AclIvanBot.DateHelper, only: [today: 0]
+  import AclIvanBot.Constants
+  import AclIvanBot.ReportsHelper
 
   def generate_report(conn, time) do
-    @projects
+    projects_list
     |> Enum.map(fn(project_name) ->
         EEx.eval_file(
           "templates/report.eex",
@@ -32,7 +33,7 @@ defmodule AclIvanBot.Reports do
   end
 
   def valid_project_name?(conn) do
-    Enum.member?(@projects, last_capture(conn))
+    Enum.member?(projects_list, last_capture(conn))
   end
 
   defp last_capture(conn) do
@@ -48,17 +49,6 @@ defmodule AclIvanBot.Reports do
     end
 
     report |> String.replace(~r/<|>/, "")
-  end
-
-  defp fetch_name(users, user_id) do
-    users
-    |> get_in([user_id, :profile, :first_name])
-    |> to_string
-    |> case do
-        "" -> get_in(users, [user_id, :name])
-        name -> name
-      end
-    |> String.upcase
   end
 
   defp format_report(report) do

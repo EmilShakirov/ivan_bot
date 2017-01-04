@@ -1,6 +1,6 @@
 defmodule Alice.Handlers.Standup do
   @moduledoc """
-  Alice.Handlers.Standup is a slack handler for managing incoming slack bot messages
+  A slack handler for managing incoming slack bot messages
   """
 
   @valid_project_name_warning """
@@ -9,10 +9,7 @@ defmodule Alice.Handlers.Standup do
   """
 
   alias Alice.Conn
-  import AclIvanBot.Constants
-  import AclIvanBot.DateHelper
-  import AclIvanBot.Reports
-  import AclIvanBot.ReportsHelper
+  import AclIvanBot.{Constants, DateHelper, Reports, ReportsHelper}
   use Alice.Router
 
   command ~r/\bguide\b/i, :guide

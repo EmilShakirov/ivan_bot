@@ -1,4 +1,6 @@
 defmodule AclIvanBot.Constants do
+  @moduledoc false
+
   defmacro projects_list do
     quote do: ~w(projects results risks)
   end

@@ -1,6 +1,6 @@
 defmodule AclIvanBot.Reports do
   @moduledoc """
-  AclIvanBot.Reports contains all functions related to reports handling
+  Contains all functions related to reports handling
   """
 
   @already_gen_jira_report ~r/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -/

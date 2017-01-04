@@ -1,4 +1,4 @@
-defmodule AclIvanBot.Constants do
+defmodule IvanBot.Constants do
   @moduledoc false
 
   defmacro projects_list do

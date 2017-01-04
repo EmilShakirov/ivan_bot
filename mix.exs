@@ -2,7 +2,7 @@ defmodule Andriy.Mixfile do
   use Mix.Project
 
   def project do
-    [ app: :acl_ivan_bot,
+    [ app: :ivan_bot,
       version: "0.0.1",
       elixir: "~> 1.3",
       build_embedded: Mix.env == :prod,

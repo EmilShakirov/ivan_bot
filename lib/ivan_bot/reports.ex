@@ -1,4 +1,4 @@
-defmodule AclIvanBot.Reports do
+defmodule IvanBot.Reports do
   @moduledoc """
   Contains all functions related to reports handling
   """
@@ -7,9 +7,9 @@ defmodule AclIvanBot.Reports do
   @jira_issue_regex ~r/[a-z]+-\d+/i
 
   alias Alice.Conn
-  import AclIvanBot.DateHelper, only: [today: 0]
-  import AclIvanBot.Constants
-  import AclIvanBot.ReportsHelper
+  import IvanBot.DateHelper, only: [today: 0]
+  import IvanBot.Constants
+  import IvanBot.ReportsHelper
 
   def generate_report(conn, time) do
     projects_list

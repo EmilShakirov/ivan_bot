@@ -1,4 +1,4 @@
-defmodule AclIvanBot.DateHelper do
+defmodule IvanBot.DateHelper do
   @moduledoc ~S"""
   Helper functions related to date and time
   """

@@ -1,10 +1,10 @@
-defmodule AclIvanBot.DateHelperTest do
+defmodule IvanBot.DateHelperTest do
   use ExUnit.Case
-  doctest AclIvanBot.DateHelper
+  doctest IvanBot.DateHelper
 
   import Mock
 
-  alias AclIvanBot.DateHelper
+  alias IvanBot.DateHelper
 
   describe "today/0" do
     test "replies with formatted today date" do

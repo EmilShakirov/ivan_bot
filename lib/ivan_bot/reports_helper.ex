@@ -1,4 +1,4 @@
-defmodule AclIvanBot.ReportsHelper do
+defmodule IvanBot.ReportsHelper do
   @moduledoc ~S"""
   Helper methods for report handling
   """
@@ -12,14 +12,14 @@ defmodule AclIvanBot.ReportsHelper do
   ## Examples
 
     iex> users = %{"U32FGC7UG" => %{ profile: %{ first_name: 'Ivan' }}}
-    ...> AclIvanBot.ReportsHelper.fetch_name(users, "U32FGC7UG")
+    ...> IvanBot.ReportsHelper.fetch_name(users, "U32FGC7UG")
     "IVAN"
 
     iex> users = %{"U32FGC7UG" => %{ name: 'Petr' }}
-    ...> AclIvanBot.ReportsHelper.fetch_name(users, "U32FGC7UG")
+    ...> IvanBot.ReportsHelper.fetch_name(users, "U32FGC7UG")
     "PETR"
 
-    iex> AclIvanBot.ReportsHelper.fetch_name(%{}, "U32FGC7UG")
+    iex> IvanBot.ReportsHelper.fetch_name(%{}, "U32FGC7UG")
     ""
 
   """

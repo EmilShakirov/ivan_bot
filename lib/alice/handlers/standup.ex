@@ -9,7 +9,7 @@ defmodule Alice.Handlers.Standup do
   """
 
   alias Alice.Conn
-  import AclIvanBot.{Constants, DateHelper, Reports, ReportsHelper}
+  import IvanBot.{Constants, DateHelper, Reports, ReportsHelper}
   use Alice.Router
 
   command ~r/\bguide\b/i, :guide

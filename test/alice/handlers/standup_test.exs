@@ -11,7 +11,7 @@ defmodule Alice.Handlers.StandupTest do
   use ExUnit.Case, async: true
   alias Alice.Handlers.Standup
   alias Alice.Conn
-  import AclIvanBot.DateHelper
+  import IvanBot.DateHelper
   import ExUnit.TestHelpers
 
   defp conn do

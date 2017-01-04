@@ -1,11 +1,11 @@
-# Acl Ivan Bot
+# Ivan Bot
 
 Slack bot to automate and simplify daily stand-up meetings. Stores each team member daily report.
 JIRA integration available.
 
 ## Avilable commands and usage examples
 
-See [guide](https://github.com/EmilShakirov/acl_ivan_bot/blob/master/templates/guide.eex)
+See [guide](https://github.com/EmilShakirov/ivan_bot/blob/master/templates/guide.eex)
 
 ## Dependencies
 
@@ -16,8 +16,8 @@ See [guide](https://github.com/EmilShakirov/acl_ivan_bot/blob/master/templates/g
 
 ```bash
 # clone repo
-git clone git@github.com:EmilShakirov/acl_ivan_bot.git
-cd acl_ivan_bot
+git clone git@github.com:EmilShakirov/ivan_bot.git
+cd ivan_bot
 
 # install dependencies
 mix deps.get

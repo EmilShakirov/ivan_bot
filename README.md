@@ -1,5 +1,7 @@
 # Ivan Bot
 
+[![Build Status](https://travis-ci.org/EmilShakirov/ivan_bot.svg?branch=master)](https://travis-ci.org/EmilShakirov/ivan_bot)
+
 Slack bot to automate and simplify daily stand-up meetings. Stores each team member daily report.
 JIRA integration available.
 

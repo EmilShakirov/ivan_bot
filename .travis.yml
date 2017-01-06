@@ -1,6 +1,13 @@
 language: elixir
 elixir:
-  - 1.3.4
+- 1.3.4
 otp_release:
-  - 18.2.1
+- 18.2.1
 sudo: false
+deploy:
+  provider: heroku
+  api_key:
+    secure: uwWZ0FZTZ/QYW4wLru1Xu9sc+EuQFQ7rdfIRGIURVxlvOJ0HKRZpg9yYUiEcurXszjEZlNiEe5hvnP98BQqunhUwyt9VTQLQ0q9BehyWFdeP8VflY/ZB8jP/HoE9TVdUskCqsf21ZObgiT0/O6G7kIGoqNOZFrecuIn67YTheYVK0dMWjeHCXkzmORZcx/F4ra42ieuXleUfoEw2W+xB09jNBqieg+CSxB4/CgaZk0XXnP6shzv/aoXyKj4nTI8qvfacNpRUz5XMD21PO17MFpxCCyAZhyB5UJgjH6FBM2C43/dLNky1vDqvgqdKjIPKEQAysAhFUNhP+svMUVpwThYT7aFT0kYelOidMsvkwBKC5yXnu4+MUpdA5xWQwDjcQfPfc9FbfM+f7H1DG4uTUxXKhmaHFtbfijm+cBWy/Z21ph+AoZFC+uQoRDNuvHyX3aqQKZnT0fW7BM7/jgf4+3oDXtJFLgBm8seoHyXUhhRIq+DQ8HLAU5/51bniKWbzAaWxy+mv0ZPwFd110ZIMVK3UFJJaiNaCvn/y4e7owprb9KZDU1/bpOkwWWSuhLmgskJxOY4VKDo6rxXEINElSi6hGL4kyicpaxzlIOtZYFHMXdUItEcVXJ2zlJ3TnXXq9I97KWt5/VxsRjB2xGQhet2/xtnJKI0QWSByYQC7j4Y=
+  app: vanya-bot
+  on:
+    repo: EmilShakirov/ivan_bot

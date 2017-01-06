@@ -3,11 +3,6 @@ defmodule Alice.Handlers.Standup do
   A slack handler for managing incoming slack bot messages
   """
 
-  @valid_project_name_warning """
-  Please enter valid command: `standup %PROJECT_NAME%`
-  Valid project names are `projects`, `results`, `risks`.
-  """
-
   alias Alice.Conn
   import IvanBot.{Constants, DateHelper, Reports, ReportsHelper}
   use Alice.Router
@@ -30,30 +25,30 @@ defmodule Alice.Handlers.Standup do
     response = if valid_project_name?(conn) do
        update_report(conn)
     else
-      @valid_project_name_warning
+      valid_project_name_warning
     end
 
     reply(response, conn)
   end
 
   def who_cares(conn = %Conn{slack: %{users: users}}) do
+    get_name = fn(user_id) -> "@#{get_in(users, [user_id, :name])}" end
+
     care = conn
-    |> users_care_list
-    |> Enum.map(fn(user_id) ->
-      fetch_name(users, user_id)
-    end)
+          |> users_care_list
+          |> Enum.map(get_name)
+          |> Enum.join(", ")
 
     dont_care = conn
                 |> user_dont_care_list
-                |> Enum.map(fn(user_id) ->
-                  fetch_name(users, user_id)
-                end)
-                |> Enum.filter(fn(item) ->
-                  String.length(item) > 0
-                end)
+                |> Enum.map(get_name)
+                |> Enum.filter(fn(item) -> !is_nil(item) end)
+                |> Enum.filter(fn(item) -> String.length(item) > 1 end)
+                |> Enum.join(", ")
 
     "templates/care_list.eex"
     |> EEx.eval_file([care: care, dont_care: dont_care])
+    |> String.trim_leading
     |> String.trim_trailing
     |> reply(conn)
   end

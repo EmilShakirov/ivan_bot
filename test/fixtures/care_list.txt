@@ -1,8 +1,3 @@
+_Who sent_: @Ivan
 
-_Who sent_:
-
-*IVAN*
-
-_Who didn't send_:
-
-*MICHAEL*
+_Who didn't send_: @Michael

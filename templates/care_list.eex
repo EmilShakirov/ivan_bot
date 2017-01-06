@@ -1,12 +1,7 @@
-<%= if length(care) == 0 do %>
+<%= if String.length(care) == 0 && String.length(dont_care) == 0 do %>
 Team didn't send any reports yet.
-<%= else %>
-_Who sent_:
-<%= Enum.map(care, fn(user) -> %>
-*<%= user %>*
-<% end) %>
-_Who didn't send_:
-<%= Enum.map(dont_care, fn(user) -> %>
-*<%= user %>*
-<% end) %>
 <% end %>
+<%= if String.length(care) > 0 do %>
+_Who sent_: <%= care %><% end %>
+<%= if String.length(dont_care) > 0 do %>
+_Who didn't send_: <%= dont_care %><% end %>

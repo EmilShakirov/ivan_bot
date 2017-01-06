@@ -1,6 +1,10 @@
 defmodule IvanBot.Constants do
   @moduledoc false
 
+  defmacro default_time_format do
+    quote do: "%y%m%d"
+  end
+
   defmacro projects_list do
     quote do: ~w(projects results risks)
   end
@@ -19,5 +23,12 @@ defmodule IvanBot.Constants do
 
   defmacro all_user_ids do
     quote do: unquote(projects_ids ++ results_ids ++ risks_ids)
+  end
+
+  defmacro valid_project_name_warning do
+    quote do: """
+    Please enter valid command: `standup %PROJECT_NAME%`
+    Valid project names are `projects`, `results`, `risks`.
+    """
   end
 end

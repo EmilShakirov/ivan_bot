@@ -3,12 +3,12 @@ defmodule IvanBot.DateHelper do
   Helper functions related to date and time
   """
 
-  @default_format_schema "%y%m%d"
+  import IvanBot.Constants
 
   use Timex
 
   @doc ~s"""
-    Returns current date formatted as #{@default_format_schema}
+    Returns current date formatted as #{default_time_format}
   """
   @spec today() :: String.t
   def today do
@@ -16,7 +16,7 @@ defmodule IvanBot.DateHelper do
   end
 
   @doc ~s"""
-  Returns returns previous work day formatted as #{@default_format_schema}
+  Returns returns previous work day formatted as #{default_time_format}
 
   E.g. will return friday if today is monday
   """
@@ -32,6 +32,6 @@ defmodule IvanBot.DateHelper do
   end
 
   defp default_format!(time) do
-    Timex.format!(time, @default_format_schema, :strftime)
+    Timex.format!(time, default_time_format, :strftime)
   end
 end

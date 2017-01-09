@@ -63,7 +63,7 @@ defmodule IvanBot.Reports do
   end
 
   defp represent_jira_issue({issue, index}) do
-    [number | custom_status] = String.split(issue, [";"], trim: true)
+    [number | custom_status] = issue |> String.trim |> String.split([";"], trim: true)
 
     %{"fields" => %{
         "summary" => summary,

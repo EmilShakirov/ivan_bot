@@ -55,7 +55,7 @@ defmodule IvanBot.Reports do
 
   defp generate_jira_report(report) do
     report
-    |> String.split([" ", ","], trim: true)
+    |> String.split([","], trim: true)
     |> Enum.with_index(1)
     |> Enum.map(&(Task.async(fn -> represent_jira_issue(&1) end)))
     |> Enum.map(&Task.await/1)

@@ -31,4 +31,12 @@ defmodule IvanBot.Constants do
     Valid project names are `projects`, `results`, `risks`.
     """
   end
+
+  defmacro jira_issue_regex do
+    quote do: ~r/[a-z]+-\d+/i
+  end
+
+  defmacro already_gen_jira_report do
+    quote do: ~r/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -/
+  end
 end

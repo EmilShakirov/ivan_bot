@@ -8,6 +8,7 @@ standup %PROJECT_NAME%
 > _Sends your daily report (should be used in DM without a mentioning of @ivan)_
 > _Report message should be on new line_
 > _You can send your report in any format as well as *comma-separated JIRA issue numbers*_
+> _You can add custom statuses by separating them by *semicolon*(see example)_
 
 _Example:_
 ```
@@ -29,7 +30,7 @@ ivan: Thank you for your report, @username
 *OR*
 ```
 You: standup tesla-motors
-TM-1234, TM-765, ENG-54569, DES-9, TM-900
+TM-1234;WIP, TM-765;DONE, ENG-54569;Post questions in the task, DES-9;Won't do, TM-900;Bananas
 ```
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

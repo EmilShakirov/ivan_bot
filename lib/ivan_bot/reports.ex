@@ -3,13 +3,8 @@ defmodule IvanBot.Reports do
   Contains all functions related to reports handling
   """
 
-  @already_gen_jira_report ~r/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -/
-  @jira_issue_regex ~r/[a-z]+-\d+/i
-
   alias Alice.Conn
-  import IvanBot.DateHelper, only: [today: 0]
-  import IvanBot.Constants
-  import IvanBot.ReportsHelper
+  import IvanBot.{Constants, DateHelper, ReportsHelper}
 
   def generate_report(conn, time) do
     projects_list
@@ -42,8 +37,8 @@ defmodule IvanBot.Reports do
 
   defp decorate_report(report) do
     report = cond do
-      Regex.match?(@already_gen_jira_report, report) -> report
-      Regex.match?(@jira_issue_regex, report)
+      Regex.match?(already_gen_jira_report, report) -> report
+      Regex.match?(jira_issue_regex, report)
         && !Regex.match?(~r/browse\//, report) -> generate_jira_report(report)
       true -> report
     end
@@ -68,18 +63,22 @@ defmodule IvanBot.Reports do
   end
 
   defp represent_jira_issue({issue, index}) do
+    [number | custom_status] = String.split(issue, [";"], trim: true)
+
     %{"fields" => %{
         "summary" => summary,
         "status" => %{"name" => status}
       }
-    } = Jira.API.ticket_details(issue)
+    } = Jira.API.ticket_details(number)
+
+    if length(custom_status) > 0, do: status = List.first(custom_status)
 
     EEx.eval_file(
       "templates/jira_issue.eex",
       [
         index: index,
-        issue: issue,
-        link: "#{Application.get_env(:jira, :host)}/browse/#{issue}",
+        issue: number,
+        link: "#{Application.get_env(:jira, :host)}/browse/#{number}",
         status: status,
         summary: summary
       ])

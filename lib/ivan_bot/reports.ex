@@ -18,17 +18,27 @@ defmodule IvanBot.Reports do
         )
     end)
     |> Enum.join("\n")
-    |> String.trim_trailing
+    |> String.trim
   end
 
   def update_report(conn) do
     conn
     |> Conn.put_state_for(today, updated_state(conn))
-    |> report_thank
   end
 
   def valid_project_name?(conn) do
     Enum.member?(projects_list, last_capture(conn))
+  end
+
+  def report_thank(conn), do: "Thank you for your report, #{Conn.at_reply_user(conn)}"
+
+  defp fetch_ticket_details(issue_number) do
+    case Jira.API.ticket_details(issue_number) do
+      %{"fields" => fields} ->
+        %{"summary" => summary, "status" => %{"name" => status}} = fields
+        {:ok, status, summary}
+      %{"errorMessages" => errorMessages} -> {:error, errorMessages}
+    end
   end
 
   defp last_capture(conn) do
@@ -55,33 +65,38 @@ defmodule IvanBot.Reports do
 
   defp generate_jira_report(report) do
     report
-    |> String.split([","], trim: true)
+    |> String.split(["\n"], trim: true)
     |> Enum.with_index(1)
     |> Enum.map(&(Task.async(fn -> represent_jira_issue(&1) end)))
     |> Enum.map(&Task.await/1)
+    |> Enum.filter(fn(item) -> String.length(item) > 0 end)
     |> Enum.join("\n")
   end
 
+  defp represent_jira_issue({";", _index}), do: ""
+  defp represent_jira_issue({",", _index}), do: ""
+  defp represent_jira_issue({"", _index}), do: ""
   defp represent_jira_issue({issue, index}) do
-    [number | custom_status] = issue |> String.trim |> String.split([";"], trim: true)
+    [number | custom_status] = issue
+                              |> String.trim
+                              |> String.split([";"], trim: true)
 
-    %{"fields" => %{
-        "summary" => summary,
-        "status" => %{"name" => status}
-      }
-    } = Jira.API.ticket_details(number)
+    case fetch_ticket_details(number) do
+      {:ok, status, summary} ->
+        if length(custom_status) > 0, do: status = List.first(custom_status)
 
-    if length(custom_status) > 0, do: status = List.first(custom_status)
-
-    EEx.eval_file(
-      "templates/jira_issue.eex",
-      [
-        index: index,
-        issue: number,
-        link: "#{Application.get_env(:jira, :host)}/browse/#{number}",
-        status: status,
-        summary: summary
-      ])
+        EEx.eval_file(
+          "templates/jira_issue.eex",
+          [
+            index: index,
+            issue: number,
+            link: "#{Application.get_env(:jira, :host)}/browse/#{number}",
+            status: status,
+            summary: summary
+          ])
+      {:error, _} ->
+        EEx.eval_file("templates/unknown_issue.eex", [index: index, issue: number])
+    end
   end
 
   defp reports_per_project(conn = %Conn{slack: %{users: users}}, project_name, time) do
@@ -108,8 +123,6 @@ defmodule IvanBot.Reports do
         """
       end)
   end
-
-  defp report_thank(conn), do: "Thank you for your report, #{Conn.at_reply_user(conn)}"
 
   defp updated_state(conn = %Conn{message: %{user: user_id, text: report}}, options \\ %{}) do
     project_name = options[:project_name] || last_capture(conn)

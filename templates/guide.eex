@@ -6,31 +6,16 @@ standup %PROJECT_NAME%
 %REPORT_MESSAGE%
 ```
 > _Sends your daily report (should be used in DM without a mentioning of @ivan)_
-> _Report message should be on new line_
-> _You can send your report in any format as well as *comma-separated JIRA issue numbers*_
-> _You can add custom statuses by separating them by *semicolon*(see example)_
+> _Report message should be on new line and each task should be on new line_
+> _Separate JIRA issue number and custom status with semicolon *;*_
 
 _Example:_
 ```
-You: standup tesla-motors
-1) Opening of glovebox causes ejection of the driver's seat
-https://tesla-motors.atlassian.net/browse/ENG-5456
-Status: done
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-2) You cannot drive while windshields are turned on
-https://tesla-motors.atlassian.net/browse/TM-7272
-Status: cannot reproduce, asked Gilbert to check again
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-3) Tune wheels according to styleguides
-https://tesla-motors.net/browse/ENG-7399
-Status: done
-
-ivan: Thank you for your report, @username
-```
-*OR*
-```
-You: standup tesla-motors
-TM-1234;WIP, TM-765;DONE, ENG-54569;Post questions in the task, DES-9;Won't do, TM-900;Bananas
+standup tesla-motors
+TM-1234;WIP
+TM-765;DONE SHIPPED
+ENG-54569;Post questions in the task, wait until response
+DES-9;Won't do, TM-900;Bananas, Doritos9@!*&^%
 ```
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -59,3 +44,15 @@ etc
 
 `@ivan yesterday`
 > _Gives you yesterday's report (shold be used with mentioning of @ivan)_
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+`@ivan who cares`
+> _Returns list of users already participated in report_
+
+_Example_
+```
+_Who sent_: @alex, @boris, @costya, @dima, @egorka
+
+_Who didn't send_: @volodya
+```

@@ -16,6 +16,8 @@ See [guide](https://github.com/EmilShakirov/ivan_bot/blob/master/templates/guide
 
 ## Quick Start
 
+_**Note:**_ You have to setup environment variables mentioned in [/config/dev.exs](https://github.com/EmilShakirov/ivan_bot/blob/master/config/dev.exs) before starting the applicaton.
+
 ```bash
 # clone repo
 git clone git@github.com:EmilShakirov/ivan_bot.git

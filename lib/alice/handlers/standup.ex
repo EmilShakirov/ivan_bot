@@ -23,7 +23,10 @@ defmodule Alice.Handlers.Standup do
 
   def standup(conn) do
     response = if valid_project_name?(conn) do
-      conn |> update_report |> report_thank
+      conn
+      |> update_report
+      |> get_users_report
+      |> report_thank(conn)
     else
       valid_project_name_warning
     end

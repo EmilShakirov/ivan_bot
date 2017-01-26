@@ -36,7 +36,11 @@ defmodule IvanBot.Constants do
     quote do: ~r/[a-z]+-\d+/i
   end
 
-  defmacro already_gen_jira_report do
-    quote do: ~r/- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -/
+  defmacro new_line do
+    quote do: "\n"
+  end
+
+  defmacro empty_team_report do
+    quote do: %{"projects" => %{}, "results" => %{}, "risks" => %{}}
   end
 end

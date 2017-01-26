@@ -6,6 +6,10 @@ defmodule IvanBot.Reports do
   alias Alice.Conn
   import IvanBot.{Constants, DateHelper, ReportsHelper}
 
+  def get_users_report(conn = %Conn{message: %{user: user_id}}) do
+    conn |> Conn.get_state_for(today) |> get_in([project_name_from_conn(conn), user_id])
+  end
+
   def generate_report(conn, time) do
     projects_list
     |> Enum.map(fn(project_name) ->
@@ -17,20 +21,37 @@ defmodule IvanBot.Reports do
           ]
         )
     end)
-    |> Enum.join("\n")
+    |> Enum.join(new_line)
     |> String.trim
   end
 
+  def report_thank(report, conn) do
+    """
+    Thank you for your report, #{Conn.at_reply_user(conn)}
+
+    Here it is, please check it out:
+    #{report}
+    """
+  end
+
   def update_report(conn) do
-    conn
-    |> Conn.put_state_for(today, updated_state(conn))
+    conn |> parse_user_input |> put_project_state(conn)
   end
 
   def valid_project_name?(conn) do
-    Enum.member?(projects_list, last_capture(conn))
+    Enum.member?(projects_list, project_name_from_conn(conn))
   end
 
-  def report_thank(conn), do: "Thank you for your report, #{Conn.at_reply_user(conn)}"
+  defp decorate_report(report) do
+    report = report
+            |> String.replace(~r/<|>/, "")
+            |> String.replace(~r/^@\w+\s/, "")
+            |> String.replace(~r/standup\s+\w+\n/i, "")
+
+    if Regex.match?(jira_issue_regex, report), do: report = generate_jira_report(report)
+
+    report
+  end
 
   defp fetch_ticket_details(issue_number) do
     case Jira.API.ticket_details(issue_number) do
@@ -41,45 +62,39 @@ defmodule IvanBot.Reports do
     end
   end
 
-  defp last_capture(conn) do
-    conn |> Conn.last_capture |> String.downcase
-  end
-
-  defp decorate_report(report) do
-    report = cond do
-      Regex.match?(already_gen_jira_report, report) -> report
-      Regex.match?(jira_issue_regex, report)
-        && !Regex.match?(~r/browse\//, report) -> generate_jira_report(report)
-      true -> report
-    end
-
-    report |> String.replace(~r/<|>/, "")
-  end
-
-  defp format_report(report) do
-    report
-    |> String.replace(~r/<|>/, "")
-    |> String.replace(~r/^@\w+\s/, "")
-    |> String.replace(~r/standup\s+\w+\n/i, "")
-  end
-
   defp generate_jira_report(report) do
     report
-    |> String.split(["\n"], trim: true)
+    |> String.split([new_line], trim: true)
     |> Enum.with_index(1)
     |> Enum.map(&(Task.async(fn -> represent_jira_issue(&1) end)))
     |> Enum.map(&Task.await/1)
     |> Enum.filter(fn(item) -> String.length(item) > 0 end)
-    |> Enum.join("\n")
+    |> Enum.join(new_line)
+  end
+
+  defp new_project_state(report, conn = %Conn{message: %{user: user_id}}) do
+    conn
+    |> Conn.get_state_for(today, empty_team_report)
+    |> put_in([project_name_from_conn(conn), user_id], report)
+  end
+
+  defp parse_user_input(conn = %Conn{message: %{text: raw_report}}) do
+    raw_report |> decorate_report |> new_project_state(conn)
+  end
+
+  defp project_name_from_conn(conn) do
+    conn |> Conn.last_capture |> String.downcase
+  end
+
+  defp put_project_state(project_state, conn) do
+    conn |> Conn.put_state_for(today, project_state)
   end
 
   defp represent_jira_issue({";", _index}), do: ""
   defp represent_jira_issue({",", _index}), do: ""
   defp represent_jira_issue({"", _index}), do: ""
   defp represent_jira_issue({issue, index}) do
-    [number | custom_status] = issue
-                              |> String.trim
-                              |> String.split([";"], trim: true)
+    [number | custom_status] = issue |> String.trim |> String.split([";"], trim: true)
 
     case fetch_ticket_details(number) do
       {:ok, status, summary} ->
@@ -106,37 +121,10 @@ defmodule IvanBot.Reports do
     |> Map.to_list
     |> Enum.map(
       fn({user_id, report}) ->
-        decorated_report = decorate_report(report)
-        new_state = updated_state(
-          conn,
-          %{
-            project_name: project_name,
-            report: decorated_report,
-            time: time,
-            user_id: user_id
-          })
-        Conn.put_state_for(conn, time, new_state)
-
         """
         *#{fetch_name(users, user_id)}:*
-        #{decorated_report}
+        #{report}
         """
       end)
-  end
-
-  defp updated_state(conn = %Conn{message: %{user: user_id, text: report}}, options \\ %{}) do
-    project_name = options[:project_name] || last_capture(conn)
-    report = options[:report] || report
-    time = options[:time] || today
-    user_id = options[:user_id] || user_id
-
-    state_by_project = conn
-                        |> Conn.get_state_for(time, %{})
-                        |> Map.put_new(project_name, %{})
-                        |> Map.get(project_name, %{})
-                        |> Map.put(user_id, format_report(report))
-    conn
-    |> Conn.get_state_for(time, %{})
-    |> Map.put(project_name, state_by_project)
   end
 end

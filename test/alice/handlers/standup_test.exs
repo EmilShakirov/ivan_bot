@@ -63,7 +63,7 @@ defmodule Alice.Handlers.StandupTest do
 
   describe "standup/1" do
     test "says thanks after receiving standup report", %{conn: conn} do
-      thanks = "Thank you for your report, <@ivan>"
+      thanks = "Thank you for your report, <@ivan>\n\nHere it is, please check it out:\ntest\n"
       Standup.standup(conn)
 
       assert_received {:msg, ^thanks}

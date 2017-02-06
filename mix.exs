@@ -24,7 +24,7 @@ defmodule Andriy.Mixfile do
 
   defp deps do
      [
-       {:alice, github: "vaihtovirta/alice", branch: "upgrade-slack-dependency"},
+       {:alice, github: "alice-bot/alice", branch: "master"},
        {:jira, "~> 0.0.8"},
        {:timex, "~> 3.0"},
        {:websocket_client, "~> 1.1.0"},

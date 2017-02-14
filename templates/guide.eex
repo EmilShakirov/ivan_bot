@@ -6,10 +6,10 @@ standup %PROJECT_NAME%
 %REPORT_MESSAGE%
 ```
 > _Sends your daily report (should be used in DM without a mentioning of @ivan)_
-> _Report message should be on new line and each task should be on new line_
+> _Report message and each task should be on new line_
 > _Separate JIRA issue number and custom status with semicolon *;*_
 
-_Example:_
+_Request Example:_
 ```
 standup tesla-motors
 TM-1234;WIP
@@ -23,12 +23,8 @@ DES-9;Won't do, TM-900;Bananas, Doritos9@!*&^%
 `@ivan report`
 > _Gives you recent daily report (shold be used with mentioning of @ivan)_
 
-_Example:_
+_Response Example:_
 ```
-You: @ivan report
-
-ivan:
-
 *Team Alpha:*
 
 *PETR PETROV:*
@@ -43,14 +39,14 @@ etc
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 `@ivan yesterday`
-> _Gives you yesterday's report (shold be used with mentioning of @ivan)_
+> _Gives you yesterday's report (should be used with mentioning of @ivan)_
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 `@ivan who cares`
 > _Returns list of users already participated in report_
 
-_Example_
+_Response Example_
 ```
 _Who sent_: @alex, @boris, @costya, @dima, @egorka
 

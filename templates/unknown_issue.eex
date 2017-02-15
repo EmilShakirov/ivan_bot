@@ -1,2 +1,3 @@
-<%=index%>) <%= issue %> _Ivan wasn't able to find this issue_
+<%=index%>) <%= issue %>
+Status: <%= status %>
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -110,7 +110,14 @@ defmodule IvanBot.Reports do
             summary: summary
           ])
       {:error, _} ->
-        EEx.eval_file("templates/unknown_issue.eex", [index: index, issue: number])
+        EEx.eval_file(
+          "templates/unknown_issue.eex",
+          [
+            index: index,
+            issue: number,
+            status: List.first(custom_status) || "N/A"
+          ]
+        )
     end
   end
 

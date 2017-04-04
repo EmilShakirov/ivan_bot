@@ -10,11 +10,11 @@ defmodule IvanBot.Constants do
   end
 
   defmacro projects_ids do
-    quote do: ~w(U32FGC7UG U334YACBV U3373TYHY U33ST9YLW U33T52M5M)
+    quote do: ~w(U32FGC7UG U334YACBV U33T52M5M U421XV5RA)
   end
 
   defmacro results_ids do
-    quote do: ~w(U32FL6RS4 U39S2MMJ5)
+    quote do: ~w(U32FL6RS4 U418ZRFCH)
   end
 
   defmacro risks_ids do

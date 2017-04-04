@@ -4,7 +4,6 @@ defmodule FakeSlack do
   end
 end
 
-
 defmodule Alice.Handlers.StandupTest do
   @user_id "U123456"
 

@@ -15,7 +15,7 @@ defmodule IvanBot.ReportsTest do
       },
       state: %{
         today => %{"projects" =>
-          %{"U32FGC7UG" => "XD-666;Go go PR, Continue;aa!bb@;;;;,\nXD-333;WIP\n\n;\n,"}
+          %{"U32FGC7UG" => "XD-666;Go go PR, Continue/;aa!bb@;;;;,\nXD-333;WIP\n\n;\n,"}
         },
       }
     }
